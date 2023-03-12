@@ -1,0 +1,7 @@
+version: "1.0"
+services:
+  web:
+    ports:
+      - "8080:80"
+    image: 'bababibi/cesi-continuousintegration:latest'
+

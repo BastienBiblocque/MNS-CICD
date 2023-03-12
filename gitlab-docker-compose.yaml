@@ -1,0 +1,31 @@
+version: '3.6'
+services:
+  web:
+  # On utilise l'image officielle de Gitlab
+    image: 'gitlab/gitlab-ee:latest'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://57.128.111.228'
+        gitlab_rails['gitlabc_shell_ssh_port'] = 8022
+    ports:
+    # Permet de déployer notre application sur le port 80, port par défaut de http
+      - '80:80'
+      - '443:443'
+      - '8022:22'
+    volumes:
+    # On utilise des volumes pour stocker les données de Gitlab
+      - './config:/etc/gitlab'
+      - './logs:/var/log/gitlab'
+      - './data:/var/opt/gitlab'
+
+  runner:
+  # On utilise l'image officielle de Gitlab pour le runner
+    image: gitlab/gitlab-runner:latest
+    container_name: glrunner
+    # Permet de redémarrer le runner en cas de plantage
+    restart: always
+    volumes:
+    # On utilise des volumes pour stocker les données du runner
+      - ./runner:/etc/gitlab-runner
+      - ./runnerhome:/home/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
